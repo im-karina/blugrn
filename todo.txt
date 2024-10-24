@@ -1,0 +1,2 @@
+[ ] Rework docker-compose.x.yml to based on `text/template`
+[ ] Swap auth to use jwts, remove SECRET_KEY env var, add JWKS_URL env var.
