@@ -104,6 +104,7 @@ func main() {
 			log.Println(r.Header.Get("X-Sentinel-Auth"))
 			log.Println(os.Getenv("SECRET_KEY"))
 			w.WriteHeader(http.StatusUnauthorized)
+			w.Write([]byte("unauthorized"))
 			return
 		}
 		log.Println("auth worked")
@@ -143,6 +144,8 @@ func main() {
 		} else {
 			down(Blue)
 		}
+		w.WriteHeader(http.StatusAccepted)
+		fmt.Fprintf(w, "deployed: %v", color)
 	})
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
