@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"crypto/hmac"
 	"fmt"
@@ -154,7 +155,15 @@ func main() {
 		default:
 			panic("unknown color")
 		}
-		req, err := http.NewRequest(r.Method, fmt.Sprintf("http://localhost:%s%s", port, r.URL.Path), r.Body)
+		var buf bytes.Buffer
+		buf.WriteString("http://localhost:")
+		buf.WriteString(port)
+		buf.WriteString(r.URL.Path)
+		if len(r.URL.RawQuery) > 0 {
+			buf.WriteString("?")
+			buf.WriteString(r.URL.RawQuery)
+		}
+		req, err := http.NewRequest(r.Method, buf.String(), r.Body)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
