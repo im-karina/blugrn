@@ -120,7 +120,7 @@ func main() {
 		w.WriteHeader(http.StatusAccepted)
 
 		ticker := time.NewTicker(time.Second).C
-		timeout := time.NewTimer(30 * time.Second).C
+		timeout := time.NewTimer(300 * time.Second).C
 		for {
 			select {
 			case <-r.Context().Done():
