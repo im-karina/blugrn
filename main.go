@@ -174,12 +174,18 @@ func main() {
 
 		// Copy headers
 		req.Header = r.Header
+		if fwd := w.Header().Get("X-Forwarded-For"); fwd == "" {
+			req.Header.Set("X-Forwarded-For", r.RemoteAddr)
+		} else {
+			req.Header.Set("X-ForwardedFor", fmt.Sprintf("%s, %s", r.RemoteAddr, fwd))
+		}
 
 		// Forward the request
 		client := &http.Client{}
 		resp, err := client.Do(req)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Println("failed to execute request:", err)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		defer resp.Body.Close()
